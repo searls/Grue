@@ -38,7 +38,7 @@ World:: =
 
     while i < len
       item = things.at(i)
-      things.combine item.get("contents")  if (item instanceof Container and item.open) or item instanceof Supporter
+      things.combine item.get("contents")  if (item instanceof Grue.Container and item.open) or item instanceof Grue.Supporter
       i++
     things = things.query(query)  if query
     things.nudge = (keyword) ->

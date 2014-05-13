@@ -6,7 +6,7 @@
 # around blindly for what you need later on.
 
 Grue.Bag = Bag = (array) ->
-  return new Bag(array)  unless this instanceof Bag
+  return new Bag(array)  unless this instanceof Grue.Bag
   @items = []
   if array
     array = array.toArray()  unless typeof array.toArray is "undefined"
