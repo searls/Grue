@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= pkg.name %></title>
+
+    <link rel="stylesheet" type="text/css" href="<%= css %>" media="all" />
+  </head>
+
+    <body>
+      <h1>Grue: Interactive Fiction for JavaScript</h1>
+      <p>
+      <p>This space intentionally left blank.
+      <div id="output"></div>
+      <input id="input" placeholder='enter command here (look, open, take, go, etc.)'>
+      <p class=trackback>Check out the source for Grue <a href="https://github.com/searls/Grue">here</a>.
+    <script type="text/javascript" src="<%= js %>"></script>
+  </body>
+</html>

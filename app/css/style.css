@@ -1,0 +1,53 @@
+* {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+body {
+  font-family: tahoma, verdana, arial;
+}
+
+#output {
+  width: 100%;
+  height: 400px;
+  font-size: 1em;
+  border: 1px solid #333;
+  border-radius: 8px;
+  box-shadow: inset 0px 0px 32px rgba(255, 255, 255, .6);
+  background: black;
+  color: #F82;
+  font-family: monospace;
+  overflow: auto;
+}
+
+.console-line {
+  margin-bottom: 1em;
+  line-height: 1.4;
+  padding: 1em;
+}
+
+.console-line.console-echo {
+  margin-bottom: 0;
+  padding: .5em;
+  line-height: 1;
+  color: #2C2;
+  font-weight: bold;
+}
+
+.console-line ul {
+  margin: 0;
+}
+
+.console-line:last-child {
+  background: rgba(128, 128, 128, .3);
+}
+
+#input {
+  width: 100%;
+  font-size: 2em;
+  border: 1px solid #CCC;
+  border-radius: 4px;
+  box-shadow: inset 4px 4px 16px rgba(0, 0, 0, .1);
+  padding: 4px;
+}
