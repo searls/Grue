@@ -1,5 +1,5 @@
-define('Grue/BaseRules', {
-
+window.Grue = window.Grue || {};
+Grue.BaseRules = {
   /*
 
   To match Zork, we need:
@@ -33,21 +33,12 @@ define('Grue/BaseRules', {
 
   */
 
-  /*
-
-  Placing the rules in the init property of this object is partly a response
-  to the way RequireJS works, but it also has the side-effect of letting us
-  segment rules into groups: some of which exist at the start, both others
-  that we could call later on, in response to rule changes.
-
-  */
-
   init: function(world) {
 
     world.parser.addRule(/(look|examine|describe)( at )*([\w\s]+)*/i, function(match) {
       var object = match[3];
       if (object) {
-        world.askLocal('look', match[3]);  
+        world.askLocal('look', match[3]);
       } else if (world.currentRoom.check('look')) {
         world.currentRoom.ask('look');
       }
@@ -122,5 +113,4 @@ define('Grue/BaseRules', {
     });
 
   }
-
-})
+};

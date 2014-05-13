@@ -19,7 +19,6 @@ Currently, there are five files that load up the test environment:
 * World.js - the main Grue library, which implements the base prototypes and utility functions.
 * BaseRules.js - contains the main parser vocabulary for my test game. This will eventually become a generic ruleset that people can build on.
 * test.js - builds a small, familiar scene using Grue, as a way of testing the environment.
-* almond.js - a small AMD loader by James Burke, used by Grue to load the base ruleset without strongly coupling them together.
 * index.html - loads all of the above, and provides a retro-styled interface for the Grue console.
 
 You can view a live version of the current Grue test environment by [visiting the demo page](http://thomaswilburn.github.com/Grue).

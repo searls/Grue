@@ -1,7 +1,5 @@
 (function() {
 
-var requireExists = typeof window.define == 'function' && typeof window.require == 'function';
-
 /*
 
 Bag is a kind of limited-use underscore.js - an explicitly-unsorted collection
@@ -732,14 +730,7 @@ var World = function() {
   this.currentRoom = null;
   this.format = Formatter;
 
-  //Grue uses AMD to load its base rules without excessive hackery. 
-  //Note: it would be nice to be more careful with their existence.
-  var self = this;
-  if (requireExists) {
-    require(['Grue/BaseRules'], function(BaseRules) {
-      BaseRules.init(self);
-    });
-  }
+  Grue.BaseRules.init(this);
 };
 World.prototype = {
   Bag: Bag,
@@ -797,23 +788,7 @@ World.prototype = {
   }
 };
 
-/*
-
-I recommend using AMD modules to load Grue, but it's not a hard and fast
-requirement. It registers itself as Grue, but returns the World constructor.
-See test.js for an example of doing this properly.
-
-If you don't include some kind of AMD loader, however, the base rules aren't
-going to load, so you'd better like writing parser vocabulary.
-
-*/
-
-if (requireExists) {
-  define('Grue', function() {
-    return World;
-  });
-} else {
-  window.World = World;
-}
+window.Grue = window.Grue || {};
+Grue.World = World;
 
 })();

@@ -3,13 +3,7 @@
 //on the back end. Later on, many of the rules tested here will be moved into
 //a "base rules" file that you can import before writing your code.
 
-//We're switching to AMD modules because they make loading the dependencies
-//much, much easier compared to my original thought (manually hooking
-//everything together using a few global scope objects--ugly!).
-
-require(['Grue'], function(World) {
-
-var zork = new World();
+var zork = new Grue.World();
 
 // Set up our UI
 var input = document.querySelector('#input');
@@ -112,5 +106,3 @@ forest.regions.add(darkness);
 // Let's start off by looking around to set the scene.
 
 zork.currentRoom.ask('look');
-
-});
