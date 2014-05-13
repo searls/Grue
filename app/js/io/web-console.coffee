@@ -1,17 +1,17 @@
-#The Console (not to be confused with the browser console) exists to direct
+#The WebConsole (not to be confused with the browser console) exists to direct
 #input into the parser and handle output from it. You don't need to directly
 #instantiate a console unless you really want to--the World will create one as
 #its "io" property, and then you can wire it up to an input field and an
 #element for output.
 
-Grue.Console = Console = (input, output) ->
+Grue.WebConsole = WebConsole = (input, output) ->
   @attach input, output  if input and output
   @onKey = @onKey.bind(this)
   @memory = []
   @memoryPointer = 0
   return
 
-Console:: =
+WebConsole:: =
   tagName: "div"
   className: "console-line"
   echoClass: "console-echo"

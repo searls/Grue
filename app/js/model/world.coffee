@@ -2,14 +2,14 @@
 #for your game, and then it provides factory access to the different object
 #types, as well as some input and output utility functions.
 
-Grue.World = World = ->
+Grue.World = World = (type = "Development")->
   @things = []
   @player = new Grue.Player(this)
   @asLocal = [@player.inventory]
-  @io = new Grue.Console()
+  @io = new Grue["#{type}Console"]()
   @parser = new Grue.Parser(this, @io)
   @currentRoom = null
-  @format = Grue.Formatter
+  @format = Grue["#{type}Formatter"]
   Grue.BaseRules.init this
   return
 
