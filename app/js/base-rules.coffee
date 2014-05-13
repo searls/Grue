@@ -1,116 +1,103 @@
-window.Grue = window.Grue || {};
-Grue.BaseRules = {
-  /*
+#  To match Zork, we need:
+#    north/northeast/east/southeast/south/southwest/west/northwest
+#    up/down
+#    look
+#    save/restore (?)
+#    restart
+#    verbose
+#    score
+#    diagnostic
+#
+#    take [all]
+#    throw X at Y
+#    open X
+#    read X
+#    drop X
+#    put X in Y
+#    turn X with Y
+#    turn on X
+#    turn off X
+#    move X
+#    attack X with Y
+#    examine X
+#    inventory
+#    eat X
+#    shout
+#    close X
+#    tie X to Y
+#    kill self with X
+#
+#
+Grue.BaseRules = init: (world) ->
+  world.parser.addRule /(look|examine|describe)( at )*([\w\s]+)*/i, (match) ->
+    object = match[3]
+    if object
+      world.askLocal "look", match[3]
+    else world.currentRoom.ask "look"  if world.currentRoom.check("look")
+    return
 
-  To match Zork, we need:
-    north/northeast/east/southeast/south/southwest/west/northwest
-    up/down
-    look
-    save/restore (?)
-    restart
-    verbose
-    score
-    diagnostic
+  world.parser.addRule /(open|close) ([\s\w]+)/i, (match) ->
+    verb = match[1]
+    awake = world.getLocal(false, match[2])
+    if awake
+      awake.ask verb
+    else
+      world.print "You can't open that."
+    return
 
-    take [all]
-    throw X at Y
-    open X
-    read X
-    drop X
-    put X in Y
-    turn X with Y
-    turn on X
-    turn off X
-    move X
-    attack X with Y
-    examine X
-    inventory
-    eat X
-    shout
-    close X
-    tie X to Y
-    kill self with X
+  world.parser.addRule /read ([\w\s]+\w)/, (match) ->
+    awake = world.getLocal(false, match[1])
+    if awake
+      awake.ask "read"
+    else
+      world.print "I don't think you can read that right now."
+    return
 
-  */
+  world.parser.addRule "turn :item on", (matches) ->
+    awake = world.getLocal(false, matches.item)
+    if awake
+      awake.ask "activate"
+    else
+      world.print "Turn what on?"
+    return
 
-  init: function(world) {
+  world.parser.addRule "turn :item off", (matches) ->
+    awake = world.getLocal(false, matches.item)
+    if awake
+      awake.ask "deactivate"
+    else
+      world.print "Turn what off?"
+    return
 
-    world.parser.addRule(/(look|examine|describe)( at )*([\w\s]+)*/i, function(match) {
-      var object = match[3];
-      if (object) {
-        world.askLocal('look', match[3]);
-      } else if (world.currentRoom.check('look')) {
-        world.currentRoom.ask('look');
-      }
-    });
+  world.parser.addRule /^go ([\w]+)|^(n|north|s|south|e|east|w|west|in|inside|out|outside|up|down)$/i, (match) ->
+    world.currentRoom.ask "go",
+      direction: match[1] or match[2]
 
-    world.parser.addRule(/(open|close) ([\s\w]+)/i, function(match) {
-      var verb = match[1];
-      var awake = world.getLocal(false, match[2]);
-      if (awake) {
-        awake.ask(verb);
-      } else {
-        world.print("You can't open that.");
-      }
-    });
+    return
 
-    world.parser.addRule(/read ([\w\s]+\w)/, function(match) {
-      var awake = world.getLocal(false, match[1]);
-      if (awake) {
-        awake.ask('read');
-      } else {
-        world.print("I don't think you can read that right now.")
-      }
-    });
+  world.parser.addRule /(take|get|pick up) (\w+)(?: from )*(\w*)/, (match) ->
+    portable = world.getLocal("portable=true", match[2])
+    return world.print("You can't take that with you.")  unless portable
+    portable.parent.remove portable
+    portable.ask "taken"
+    world.print "Taken."
+    @player.inventory.add portable
+    return
 
-    world.parser.addRule("turn :item on", function(matches) {
-      var awake = world.getLocal(false, matches.item);
-      if (awake) {
-        awake.ask('activate');
-      } else {
-        world.print('Turn what on?');
-      }
-    });
+  world.parser.addRule "drop :item", (match) ->
+    dropped = @player.inventory.contents.invoke("nudge", match.item).first()
+    return world.print("You don't have any of those.")  unless dropped
+    @player.inventory.remove dropped
+    @currentRoom.add dropped
+    dropped.ask "dropped"
+    world.print "Dropped."
+    return
 
-    world.parser.addRule("turn :item off", function(matches) {
-      var awake = world.getLocal(false, matches.item);
-      if (awake) {
-        awake.ask('deactivate');
-      } else {
-        world.print('Turn what off?');
-      }
-    });
-
-    world.parser.addRule(/^go ([\w]+)|^(n|north|s|south|e|east|w|west|in|inside|out|outside|up|down)$/i, function(match) {
-      world.currentRoom.ask('go', {direction: match[1] || match[2]});
-    });
-
-    world.parser.addRule(/(take|get|pick up) (\w+)(?: from )*(\w*)/, function(match) {
-      var portable = world.getLocal('portable=true', match[2]);
-      if (!portable) return world.print("You can't take that with you.");
-      portable.parent.remove(portable);
-      portable.ask('taken');
-      world.print('Taken.');
-      this.player.inventory.add(portable);
-    });
-
-    world.parser.addRule("drop :item", function(match) {
-      var dropped = this.player.inventory.contents.invoke('nudge', match.item).first();
-      if (!dropped) return world.print("You don't have any of those.");
-      this.player.inventory.remove(dropped);
-      this.currentRoom.add(dropped);
-      dropped.ask('dropped');
-      world.print("Dropped.");
-    });
-
-    world.parser.addRule(/^i(nventory)*$/, function() {
-      var listing = world.player.inventory.ask('contents');
-      if (!listing) {
-        world.print("You're not carrying anything.");
-      } else {
-        world.print(listing);
-      }
-    });
-
-  }
-};
+  world.parser.addRule /^i(nventory)*$/, ->
+    listing = world.player.inventory.ask("contents")
+    unless listing
+      world.print "You're not carrying anything."
+    else
+      world.print listing
+    return
+  return
