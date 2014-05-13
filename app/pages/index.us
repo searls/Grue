@@ -14,5 +14,6 @@
       <input id="input" placeholder='enter command here (look, open, take, go, etc.)'>
       <p class=trackback>Check out the source for Grue <a href="https://github.com/searls/Grue">here</a>.
     <script type="text/javascript" src="<%= js %>"></script>
+    <script type="text/javascript" src="/test.js"></script>
   </body>
 </html>
